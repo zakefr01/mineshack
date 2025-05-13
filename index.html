@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mines Predictor</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom, #1a1a2e, #16213e);
+      color: #f1f1f1;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .container {
+      text-align: center;
+      background: #0f3460;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+      max-width: 500px;
+    }
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      color: #00d9ff;
+    }
+    p {
+      font-size: 1rem;
+      color: #c4d7e0;
+    }
+    .input-section {
+      margin-bottom: 2rem;
+    }
+    input[type="text"] {
+      padding: 0.6rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      width: 80%;
+      text-align: center;
+      background: #1e1e2f;
+      color: #fff;
+      margin-top: 10px;
+    }
+    select {
+      padding: 0.6rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      background: #1e1e2f;
+      color: #fff;
+      margin-top: 10px;
+    }
+    .submit-id-btn, .predict-btn, .create-account-btn {
+      background: #00d9ff;
+      border: none;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      color: #000;
+      cursor: pointer;
+      margin-top: 1.2rem;
+      transition: background 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .submit-id-btn:hover, .predict-btn:hover, .create-account-btn:hover {
+      background: #00aacc;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 50px);
+      gap: 10px;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .tile {
+      width: 50px;
+      height: 50px;
+      background: #000;
+      border: 2px solid #1e1e1e;
+      border-radius: 8px;
+    }
+    .highlight {
+      background-color: #00ff88 !important;
+      border: 2px solid #00ff88;
+    }
+    .hidden {
+      display: none;
+    }
+    .error-message {
+      color: #ff7373;
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    .predict-wrapper {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="input-section" id="idSection">
+      <h1>Mines Predictor</h1>
+      <input type="text" id="userId" placeholder="Enter your ID" maxlength="10" oninput="this.value=this.value.replace(/[^\d]/g,'')" />
+      <br />
+      <button class="submit-id-btn" id="submitBtn" onclick="submitId()">Submit</button>
+      <div class="error-message" id="errorMessage"></div>
+      <a href="https://affpa.top/L?tag=d_4326916m_18627c_&site=4326916&ad=18627&r=registration" class="create-account-btn hidden" id="createAccountBtn">Create new account</a>
+    </div>
+
+    <div id="predictSection" class="hidden">
+      <h1>Where to Click</h1>
+      <label for="mineCount">Select number of mines:</label>
+      <select id="mineCount">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5" selected>5</option>
+      </select>
+      <div class="predict-wrapper">
+        <button class="predict-btn" onclick="predictTiles()">Predict Now</button>
+      </div>
+      <div class="grid" id="tilesResult"></div>
+    </div>
+  </div>
+
+  <script>
+    function submitId() {
+      const userId = document.getElementById('userId').value.trim();
+      const isNumeric = /^\d{1,10}$/.test(userId);
+
+      if (!isNumeric) {
+        alert('Please enter a valid numeric ID (up to 10 digits)');
+        return;
+      }
+
+      if (!userId.startsWith("12")) {
+        document.getElementById("errorMessage").innerText = "You need to create new account and top up 30-40 ZAR. Use my promo code ZA611 to get bonuses";
+        document.getElementById("submitBtn").classList.add("hidden");
+        document.getElementById("createAccountBtn").classList.remove("hidden");
+        return;
+      }
+
+      document.getElementById('idSection').classList.add('hidden');
+      document.getElementById('predictSection').classList.remove('hidden');
+    }
+
+    function predictTiles() {
+      const tilesContainer = document.getElementById('tilesResult');
+      tilesContainer.innerHTML = '';
+      const highlightTiles = new Set();
+
+      while (highlightTiles.size < 5) {
+        const row = Math.floor(Math.random() * 5) + 1;
+        const col = Math.floor(Math.random() * 5) + 1;
+        highlightTiles.add(`${row},${col}`);
+      }
+
+      for (let row = 1; row <= 5; row++) {
+        for (let col = 1; col <= 5; col++) {
+          const tile = document.createElement('div');
+          tile.className = 'tile';
+          if (highlightTiles.has(`${row},${col}`)) {
+            tile.classList.add('highlight');
+          }
+          tilesContainer.appendChild(tile);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
